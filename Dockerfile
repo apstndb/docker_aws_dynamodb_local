@@ -5,6 +5,7 @@
 #
 FROM openjdk:7-jre
 MAINTAINER Dean Giberson <dean@deangiberson.com>
+ARG VERSION=2017-02-16
 
 # Create working space
 WORKDIR /var/dynamodb_wd
@@ -13,9 +14,7 @@ WORKDIR /var/dynamodb_wd
 EXPOSE 8000
 
 # Get the package from Amazon
-RUN wget -O /tmp/dynamodb_local_latest https://s3-us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz && \
-    tar xfz /tmp/dynamodb_local_latest && \
-    rm -f /tmp/dynamodb_local_latest
+RUN curl https://s3-us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_${VERSION}.tar.gz | tar xz
 
 # Default command for image
 ENTRYPOINT ["/usr/bin/java", "-Djava.library.path=.", "-jar", "DynamoDBLocal.jar", "-dbPath", "/var/dynamodb_local"]
